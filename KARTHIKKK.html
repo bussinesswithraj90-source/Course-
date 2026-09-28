@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f7f4">
+  <meta name="description" content="Find your next course with clear, prerequisite-aware recommendations tailored to your goals.">
+  <title>Course Compass | Find your next course</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink:#172b3a; --ink-soft:#536674; --paper:#f5f7f4; --white:#fff; --line:#dfe7e2; --green:#c9ef83; --green-dark:#3a684e; --blue:#d9eaf0; --coral:#f2a58d; --serif:Georgia,'Times New Roman',serif; --sans:'DM Sans',sans-serif; --display:'Manrope',sans-serif; --shadow:0 22px 65px rgba(23,43,58,.09); }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; scroll-padding-top:88px; }
+    body { margin:0; color:var(--ink); background:var(--paper); font-family:var(--sans); font-size:15px; line-height:1.55; }
+    button,input,select { font:inherit; } button,a,select,input { -webkit-tap-highlight-color:transparent; } a { color:inherit; text-decoration:none; } button { color:inherit; }
+    .shell { width:min(1160px,calc(100% - 48px)); margin-inline:auto; }
+    .topbar { height:76px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(23,43,58,.1); }
+    .brand { display:inline-flex; align-items:center; gap:10px; font:800 17px var(--display); letter-spacing:0; }
+    .brand-mark { width:33px; height:33px; display:grid; place-items:center; color:var(--ink); background:var(--green); border-radius:10px; }
+    .brand-mark svg { width:19px; height:19px; }
+    .nav-links { display:flex; align-items:center; gap:25px; color:var(--ink-soft); font-size:13px; font-weight:600; }
+    .nav-links a { transition:color .2s ease; } .nav-links a:hover { color:var(--ink); }
+    .nav-cta { padding:10px 16px; border:1px solid var(--ink); border-radius:5px; color:var(--ink); }
+    .hero { min-height:545px; display:grid; grid-template-columns:1fr 1.02fr; align-items:center; gap:64px; padding-block:55px 65px; }
+    .eyebrow { display:inline-flex; align-items:center; gap:9px; color:var(--green-dark); font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+    .eyebrow::before { content:''; width:21px; height:1px; background:currentColor; }
+    h1,h2,h3,p { margin-top:0; }
+    h1 { max-width:560px; margin:18px 0; font:700 clamp(42px,5.3vw,65px)/1.04 var(--display); letter-spacing:0; }
+    h1 em { color:#548269; font:italic 500 1.02em/1 var(--serif); }
+    .hero-copy>p { max-width:495px; margin-bottom:27px; color:var(--ink-soft); font-size:16px; line-height:1.75; }
+    .button { min-height:48px; display:inline-flex; align-items:center; justify-content:center; gap:10px; padding:0 19px; border:1px solid var(--ink); border-radius:5px; background:var(--ink); color:var(--white); font-weight:700; font-size:13px; cursor:pointer; transition:transform .2s,background .2s,box-shadow .2s; }
+    .button:hover { transform:translateY(-2px); background:#294353; box-shadow:0 8px 18px rgba(23,43,58,.16); } .button svg { width:16px; height:16px; }
+    .hero-note { display:flex; align-items:center; gap:9px; margin-top:22px; color:var(--ink-soft); font-size:12px; } .hero-note svg { width:15px; color:var(--green-dark); }
+    .hero-visual { height:410px; position:relative; border-radius:8px; background:#d8e5dc; overflow:hidden; }
+    .hero-visual::before { content:''; position:absolute; inset:0; z-index:1; background:linear-gradient(90deg,rgba(17,39,45,.26),transparent 72%),linear-gradient(0deg,rgba(12,31,37,.23),transparent 55%); pointer-events:none; }
+    .hero-photo { width:100%; height:100%; object-fit:cover; object-position:center 48%; display:block; }
+    .photo-label { position:absolute; z-index:2; left:24px; bottom:22px; color:white; font:600 12px var(--sans); } .photo-label span { display:block; margin-top:2px; opacity:.82; font-size:11px; font-weight:400; }
+    .floating-card { position:absolute; z-index:3; top:30px; right:-20px; width:220px; padding:17px; border:1px solid rgba(255,255,255,.74); border-radius:7px; background:rgba(255,255,255,.94); box-shadow:var(--shadow); backdrop-filter:blur(10px); }
+    .floating-card-label { display:flex; align-items:center; justify-content:space-between; color:var(--ink-soft); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
+    .match-score { margin:12px 0 5px; font:800 29px var(--display); letter-spacing:0; } .match-score small { color:var(--green-dark); font:700 11px var(--sans); }
+    .match-track { height:5px; margin:11px 0; overflow:hidden; border-radius:3px; background:#e7ede8; } .match-track span { display:block; width:86%; height:100%; background:#77a980; border-radius:inherit; }
+    .match-course { padding-top:10px; border-top:1px solid var(--line); color:var(--ink-soft); font-size:11px; } .match-course strong { display:block; color:var(--ink); font-size:12px; }
+    .trust-row { display:flex; align-items:center; gap:24px; padding:19px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); color:var(--ink-soft); font-size:11px; }
+    .trust-item { display:flex; align-items:center; gap:8px; } .trust-item svg { width:15px; height:15px; color:var(--green-dark); } .trust-divider { width:1px; height:17px; background:var(--line); }
+    .section { padding-block:100px; }
+    .section-heading { max-width:640px; margin-bottom:34px; }
+    .section-heading h2 { margin:13px 0 10px; font:700 37px/1.15 var(--display); letter-spacing:0; } .section-heading p { max-width:550px; margin-bottom:0; color:var(--ink-soft); font-size:14px; }
+    #planner { background:#eaf0eb; } .planner-grid { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:22px; align-items:stretch; }
+    .panel { border:1px solid #dce5de; border-radius:7px; background:var(--white); } .form-panel { padding:28px; }
+    .panel-title { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; margin-bottom:23px; }
+    .panel-title h3 { margin:0 0 3px; font:700 18px var(--display); letter-spacing:0; } .panel-title p { margin:0; color:var(--ink-soft); font-size:12px; }
+    .step-count { flex:0 0 auto; padding:6px 8px; border-radius:4px; background:#f0f4ef; color:var(--green-dark); font-size:10px; font-weight:700; }
+    .field { margin-bottom:18px; } .field label,.field legend { display:block; margin-bottom:7px; color:var(--ink); font-size:12px; font-weight:700; }
+    .field select,.search-box input,.filter-select { width:100%; min-height:43px; padding:0 12px; border:1px solid #d8e1db; border-radius:4px; outline:none; background:#fff; color:var(--ink); font-size:12px; }
+    .field select:focus,.search-box input:focus,.filter-select:focus { border-color:#628c70; box-shadow:0 0 0 3px rgba(98,140,112,.14); }
+    fieldset { min-width:0; margin:0; padding:0; border:0; } .option-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+    .check-option { position:relative; } .check-option input { position:absolute; opacity:0; width:1px; height:1px; }
+    .check-option label { min-height:38px; display:flex; align-items:center; gap:8px; margin:0; padding:8px 10px; border:1px solid #e2e8e3; border-radius:4px; color:var(--ink-soft); font-size:11px; font-weight:500; cursor:pointer; transition:border-color .15s,background .15s,color .15s; }
+    .check-option label::before { content:''; width:13px; height:13px; flex:0 0 13px; border:1px solid #b9c8be; border-radius:3px; background:#fff; }
+    .check-option input:checked+label { border-color:#88aa8e; background:#f1f7ec; color:var(--ink); } .check-option input:checked+label::before { border-color:#477559; background:#477559; box-shadow:inset 0 0 0 3px #f1f7ec; }
+    .check-option input:focus-visible+label { outline:3px solid rgba(98,140,112,.25); outline-offset:2px; } .form-submit { width:100%; margin-top:4px; }
+    .result-panel { min-height:100%; padding:28px; background:#f8faf7; }
+    .results-header { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding-bottom:18px; border-bottom:1px solid var(--line); }
+    .results-header h3 { margin:0 0 3px; font:700 18px var(--display); letter-spacing:0; } .results-header p { margin:0; color:var(--ink-soft); font-size:12px; }
+    .result-count { display:none; white-space:nowrap; padding:6px 9px; border-radius:4px; background:#e6f0de; color:var(--green-dark); font-size:10px; font-weight:700; } .result-count.visible { display:inline-flex; }
+    .empty-state { min-height:300px; display:grid; place-content:center; justify-items:center; padding:24px; text-align:center; }
+    .empty-icon { width:54px; height:54px; display:grid; place-items:center; margin-bottom:15px; border-radius:50%; background:#e8efe7; color:var(--green-dark); } .empty-icon svg { width:24px; }
+    .empty-state h4 { margin:0 0 5px; font:700 14px var(--display); } .empty-state p { max-width:260px; margin:0; color:var(--ink-soft); font-size:12px; }
+    .recommendation-list { display:grid; gap:10px; padding-top:14px; }
+    .recommendation-card { padding:15px; border:1px solid #dfe7e0; border-radius:5px; background:var(--white); animation:reveal .35s both; } .recommendation-card:nth-child(2) { animation-delay:.06s; } .recommendation-card:nth-child(3) { animation-delay:.12s; }
+    @keyframes reveal { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+    .recommendation-top { display:flex; justify-content:space-between; gap:14px; } .course-code { color:var(--green-dark); font-size:10px; font-weight:700; letter-spacing:.06em; }
+    .recommendation-card h4 { margin:3px 0; font:700 15px var(--display); } .recommendation-card p { margin:0; color:var(--ink-soft); font-size:11px; }
+    .fit-badge { height:max-content; flex:0 0 auto; padding:5px 7px; border-radius:3px; background:#edf4e7; color:var(--green-dark); font-size:9px; font-weight:700; }
+      .fit-badge.is-next-step { background:#fff0dd; color:#855726; }
+      .shortlist-note { margin:14px 0 0; padding:11px 12px; border-left:2px solid var(--coral); background:#fff8f2; color:var(--ink-soft); font-size:11px; }
+      .shortlist-note strong { color:var(--ink); }
+      .missing-prerequisites { margin-top:11px!important; color:#855726!important; font-size:10px!important; }
+    .recommendation-meta { display:flex; align-items:center; gap:13px; margin-top:12px; padding-top:10px; border-top:1px solid #edf0ed; color:var(--ink-soft); font-size:10px; } .recommendation-meta span { display:inline-flex; align-items:center; gap:5px; }
+    .rule-note { margin-top:11px!important; color:#536674!important; font-size:10px!important; }
+    #logic { background:var(--white); } .logic-top { display:flex; align-items:end; justify-content:space-between; gap:30px; margin-bottom:34px; } .logic-top .section-heading { margin-bottom:0; }
+    .logic-note { width:220px; padding-left:16px; border-left:2px solid var(--coral); color:var(--ink-soft); font-size:11px; }
+    .logic-grid { display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+    .logic-step { min-height:195px; padding:24px 27px 24px 0; } .logic-step+.logic-step { padding-left:27px; border-left:1px solid var(--line); }
+    .logic-number { display:block; margin-bottom:22px; color:#7fa18b; font:700 12px var(--display); } .logic-step h3 { margin-bottom:8px; font:700 16px var(--display); } .logic-step p { margin:0; color:var(--ink-soft); font-size:12px; }
+    .logic-rule { margin-top:13px; padding:10px; border-radius:4px; background:#f3f6f2; color:#42664e; font:600 10px/1.6 var(--sans); }
+    .flow-line { display:flex; align-items:center; gap:8px; margin-top:14px; color:var(--ink-soft); font-size:10px; } .flow-pill { padding:5px 8px; border:1px solid var(--line); border-radius:3px; background:#fff; } .flow-arrow { color:#6b9276; }
+    #semantic-network { background:#edf2ee; }
+    .network-layout { display:grid; grid-template-columns:minmax(0,1fr) 245px; gap:16px; align-items:stretch; }
+    .network-canvas { min-width:0; overflow-x:auto; border:1px solid #dce5de; border-radius:6px; background-color:#f9fbf8; background-image:radial-gradient(#d9e3dc .8px,transparent .8px); background-size:18px 18px; scrollbar-color:#a7b9aa #edf2ee; }
+    .network-svg { display:block; width:100%; min-width:720px; height:auto; }
+    .network-edge { fill:none; stroke:#96aa9a; stroke-width:1.5; marker-end:url(#network-arrow); }
+    .network-edge-label { fill:#536674; stroke:#f9fbf8; stroke-width:5px; paint-order:stroke; stroke-linejoin:round; font:600 10px var(--sans); }
+    .network-node { cursor:pointer; outline:none; }
+    .network-node rect { fill:#fff; stroke:#cfdbd1; stroke-width:1.2; transition:fill .18s,stroke .18s,filter .18s; }
+    .network-node circle { fill:#c9ef83; stroke:#81a58a; stroke-width:1; }
+    .network-node text { fill:#172b3a; font:700 12px var(--sans); pointer-events:none; }
+    .network-node:hover rect,.network-node:focus rect { stroke:#548269; stroke-width:2; filter:drop-shadow(0 4px 5px rgba(23,43,58,.12)); }
+    .network-node.is-active rect { fill:#eff6e9; stroke:#548269; stroke-width:2; }
+    .network-node.is-active circle { fill:#f2a58d; }
+    .network-detail { display:flex; flex-direction:column; padding:21px; border:1px solid #dce5de; border-radius:6px; background:#fff; }
+    .network-detail-kicker { color:var(--green-dark); font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+    .network-detail h3 { margin:9px 0 8px; font:700 19px var(--display); }
+    .network-detail p { margin:0; color:var(--ink-soft); font-size:12px; }
+    .network-detail-label { margin:22px 0 8px; color:var(--ink); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
+    .network-relations { display:grid; gap:8px; margin:0; padding:0; list-style:none; }
+    .network-relations li { padding-left:11px; border-left:2px solid #c9ef83; color:var(--ink-soft); font-size:11px; }
+    .network-instruction { margin-top:auto!important; padding-top:20px; color:#718179!important; font-size:10px!important; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    #catalog { background:#f1f4f1; } .catalog-heading { display:flex; align-items:end; justify-content:space-between; gap:24px; margin-bottom:25px; } .catalog-heading .section-heading { margin-bottom:0; }
+    .catalog-controls { display:flex; align-items:center; gap:8px; } .search-box { position:relative; width:230px; } .search-box svg { position:absolute; top:14px; left:12px; width:15px; height:15px; color:#718179; pointer-events:none; }
+    .search-box input { padding-left:35px; } .filter-select { width:150px; } .catalog-count { margin:0 0 13px; color:var(--ink-soft); font-size:11px; }
+    .course-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .catalog-card { min-height:190px; display:flex; flex-direction:column; padding:18px; border:1px solid var(--line); border-radius:5px; background:var(--white); transition:transform .2s,box-shadow .2s; }
+    .catalog-card:hover { transform:translateY(-2px); box-shadow:0 10px 25px rgba(23,43,58,.07); } .catalog-card-top { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .catalog-code { color:var(--green-dark); font-size:10px; font-weight:700; letter-spacing:.07em; } .catalog-area { padding:4px 7px; border-radius:3px; background:#edf3ed; color:#56715c; font-size:9px; font-weight:600; }
+    .catalog-card h3 { margin:11px 0 5px; font:700 15px var(--display); line-height:1.35; } .catalog-card>p { margin:0; color:var(--ink-soft); font-size:11px; }
+    .catalog-card-foot { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:auto; padding-top:14px; color:var(--ink-soft); font-size:10px; }
+    .prereq { overflow:hidden; max-width:68%; text-overflow:ellipsis; white-space:nowrap; } .credits { flex:0 0 auto; color:var(--ink); font-weight:700; } .catalog-empty { grid-column:1/-1; padding:42px 20px; color:var(--ink-soft); text-align:center; font-size:13px; }
+    footer { padding:34px 0 22px; background:#172b3a; color:#f5f7f4; } .footer-main { display:flex; align-items:flex-start; justify-content:space-between; gap:30px; padding-bottom:28px; }
+    .footer-brand p { max-width:250px; margin:10px 0 0; color:#afbec4; font-size:11px; } footer .brand-mark { color:var(--ink); }
+    .footer-links { display:flex; gap:44px; } .footer-column { display:grid; gap:8px; align-content:start; color:#afbec4; font-size:11px; } .footer-column strong { margin-bottom:3px; color:white; font-size:11px; } .footer-column a:hover { color:var(--green); }
+    .footer-bottom { display:flex; justify-content:space-between; gap:20px; padding-top:16px; border-top:1px solid rgba(255,255,255,.14); color:#a7b5bb; font-size:10px; }
+    .status { display:inline-flex; align-items:center; gap:7px; } .status::before { content:''; width:7px; height:7px; border-radius:50%; background:#9ed479; box-shadow:0 0 0 3px rgba(158,212,121,.14); }
+    @media(max-width:850px) { .hero { gap:30px; grid-template-columns:1fr 1fr; min-height:480px; } .hero-visual { height:360px; } .floating-card { right:-10px; width:195px; } .planner-grid { grid-template-columns:1fr; } .result-panel { min-height:370px; } .course-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .network-layout { grid-template-columns:1fr; } .network-svg { min-width:760px; } .network-detail { min-height:210px; } }
+    @media(max-width:620px) {
+      .shell { width:min(100% - 32px,520px); } .topbar { height:65px; } .nav-links { gap:0; } .nav-links>a:not(.nav-cta) { display:none; } .nav-cta { padding:8px 11px; font-size:11px; }
+      .hero { display:flex; flex-direction:column; align-items:stretch; gap:28px; padding-block:44px 38px; } .hero-copy { padding-right:7px; } h1 { max-width:460px; font-size:clamp(43px,12vw,58px); } .hero-copy>p { font-size:14px; }
+      .hero-visual { height:315px; margin-right:8px; } .floating-card { top:16px; right:-9px; width:180px; padding:13px; } .match-score { margin-top:8px; font-size:25px; }
+      .trust-row { flex-wrap:wrap; gap:12px 18px; padding-block:15px; } .trust-divider { display:none; } .section { padding-block:70px; } .section-heading h2 { font-size:30px; } .section-heading { margin-bottom:26px; }
+      .form-panel,.result-panel { padding:20px; } .option-grid { gap:7px; } .check-option label { font-size:10px; padding-inline:8px; }
+      .logic-top { display:block; } .logic-note { width:auto; margin-top:20px; } .logic-grid { grid-template-columns:1fr; } .logic-step { min-height:0; padding:22px 0!important; } .logic-step+.logic-step { border-left:0; border-top:1px solid var(--line); } .logic-number { margin-bottom:12px; }
+      .catalog-heading { display:block; } .catalog-controls { align-items:stretch; margin-top:20px; } .search-box { flex:1 1 auto; width:auto; min-width:0; } .filter-select { flex:0 0 128px; width:128px; } .course-grid { grid-template-columns:1fr; } .catalog-card { min-height:165px; }
+      .footer-main { display:block; } .footer-links { justify-content:space-between; gap:15px; margin-top:25px; } .footer-bottom { flex-direction:column; gap:9px; }
+    }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }
+  </style>
+</head>
+<body>
+  <header class="shell topbar">
+    <a class="brand" href="#top" aria-label="Course Compass home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 4.5 7v6c0 4.2 3.2 7 7.5 8 4.3-1 7.5-3.8 7.5-8V7L12 3Z"/><path d="m9 12 2 2 4-4"/></svg></span>Course Compass</a>
+    <nav class="nav-links" aria-label="Main navigation"><a href="#planner">Recommendation engine</a><a href="#logic">How it works</a><a href="#semantic-network">Semantic network</a><a href="#catalog">Course catalog</a><a class="nav-cta" href="#planner">Build my plan <span aria-hidden="true">↗</span></a></nav>
+  </header>
+  <main id="top">
+    <section class="shell hero" aria-labelledby="hero-title">
+      <div class="hero-copy"><span class="eyebrow">A clearer path through your degree</span><h1 id="hero-title">Choose courses with <em>confidence.</em></h1><p>Find the classes that fit your major, completed prerequisites, and what you want to do next. Clear rules. Better next steps.</p><a class="button" href="#planner">Get course recommendations <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a><div class="hero-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 4.5 7v6c0 4.2 3.2 7 7.5 8 4.3-1 7.5-3.8 7.5-8V7L12 3Z"/><path d="m9 12 2 2 4-4"/></svg>Recommendations you can understand and verify</div></div>
+      <div class="hero-visual" aria-label="Students studying together on campus"><img class="hero-photo" src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1300&q=85" alt="University students studying together at a table"><div class="photo-label">Make your next semester count<span>Explore a path that fits your goals</span></div><div class="floating-card" aria-label="Sample course match, 86 percent"><div class="floating-card-label"><span>Profile match</span><span>01 / 03</span></div><div class="match-score">86% <small>strong fit</small></div><div class="match-track"><span></span></div><div class="match-course"><strong>Advanced Algorithms</strong>Prerequisites aligned</div></div></div>
+    </section>
+    <div class="shell trust-row" aria-label="System principles">
+      <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 4.5 7v6c0 4.2 3.2 7 7.5 8 4.3-1 7.5-3.8 7.5-8V7L12 3Z"/><path d="m9 12 2 2 4-4"/></svg>Prerequisite-aware</div><span class="trust-divider"></span>
+      <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16M4 12h16M4 19h10"/><circle cx="18" cy="19" r="2"/></svg>Rules made visible</div><span class="trust-divider"></span>
+      <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>Built around your degree</div>
+    </div>
+    <section id="planner" class="section"><div class="shell">
+      <div class="section-heading"><span class="eyebrow">Your next step starts here</span><h2>Build a course shortlist</h2><p>Tell us where you are and what interests you. We’ll show courses whose rules match your profile.</p></div>
+      <div class="planner-grid">
+        <form id="recommendation-form" class="panel form-panel">
+          <div class="panel-title"><div><h3>Your academic profile</h3><p>About a minute to get a useful shortlist.</p></div><span class="step-count">STUDENT PROFILE</span></div>
+          <div class="field"><label for="major">Major or field of study</label><select id="major" name="major" required><option value="">Choose your field</option><option value="Computer Science">Computer Science</option><option value="Data Science">Data Science</option><option value="Business">Business</option></select></div>
+          <div class="field"><label for="year">Current academic year</label><select id="year" name="year" required><option value="">Choose your year</option><option value="1">First year</option><option value="2">Second year</option><option value="3">Third year</option><option value="4">Fourth year</option></select></div>
+          <fieldset class="field"><legend>Areas you’re curious about <span style="font-weight:400;color:#718179">(choose any)</span></legend><div class="option-grid">
+            <div class="check-option"><input id="interest-ai" name="interest" type="checkbox" value="Artificial Intelligence"><label for="interest-ai">Artificial intelligence</label></div><div class="check-option"><input id="interest-web" name="interest" type="checkbox" value="Web Development"><label for="interest-web">Web development</label></div>
+            <div class="check-option"><input id="interest-data" name="interest" type="checkbox" value="Data Analytics"><label for="interest-data">Data analytics</label></div><div class="check-option"><input id="interest-finance" name="interest" type="checkbox" value="Finance"><label for="interest-finance">Finance</label></div>
+            <div class="check-option"><input id="interest-systems" name="interest" type="checkbox" value="Systems"><label for="interest-systems">Systems & security</label></div><div class="check-option"><input id="interest-product" name="interest" type="checkbox" value="Product Strategy"><label for="interest-product">Product strategy</label></div>
+          </div></fieldset>
+          <fieldset class="field"><legend>Prerequisites you’ve completed</legend><div class="option-grid">
+            <div class="check-option"><input id="pre-programming" name="prerequisite" type="checkbox" value="Programming I"><label for="pre-programming">Programming I</label></div><div class="check-option"><input id="pre-data-structures" name="prerequisite" type="checkbox" value="Data Structures"><label for="pre-data-structures">Data Structures</label></div>
+            <div class="check-option"><input id="pre-statistics" name="prerequisite" type="checkbox" value="Statistics I"><label for="pre-statistics">Statistics I</label></div><div class="check-option"><input id="pre-accounting" name="prerequisite" type="checkbox" value="Financial Accounting"><label for="pre-accounting">Financial Accounting</label></div>
+            <div class="check-option"><input id="pre-economics" name="prerequisite" type="checkbox" value="Microeconomics"><label for="pre-economics">Microeconomics</label></div><div class="check-option"><input id="pre-calculus" name="prerequisite" type="checkbox" value="Calculus I"><label for="pre-calculus">Calculus I</label></div>
+          </div></fieldset>
+          <button class="button form-submit" type="submit">Generate recommendations <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></button>
+        </form>
+        <section class="panel result-panel" aria-labelledby="results-title" aria-live="polite"><div class="results-header"><div><h3 id="results-title">Your recommended courses</h3><p id="results-subtitle">A tailored shortlist will appear here.</p></div><span id="result-count" class="result-count"></span></div>
+          <div id="recommendation-output"><div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/><path d="M8 7h8M8 11h6"/></svg></div><h4>Your next course is closer than you think</h4><p>Complete your profile and we’ll explain exactly why each course made the list.</p></div></div>
+        </section>
+      </div>
+    </div></section>
+    <section id="logic" class="section"><div class="shell">
+      <div class="logic-top"><div class="section-heading"><span class="eyebrow">No black box, just clear rules</span><h2>See how the match is made</h2><p>Recommendations come from explicit academic rules, not a mystery score. You can see the path from your completed courses to each suggestion.</p></div><aside class="logic-note">Always confirm enrollment eligibility and course availability with your academic advisor.</aside></div>
+      <div class="logic-grid">
+        <article class="logic-step"><span class="logic-number">01 / PROFILE</span><h3>Start with your context</h3><p>Your major sets the course pathways we consider. Your year helps prioritize courses that make sense for your degree stage.</p><div class="logic-rule">MAJOR = Computer Science<br>YEAR ≥ 2</div></article>
+        <article class="logic-step"><span class="logic-number">02 / CHECK</span><h3>Verify each prerequisite</h3><p>A course only appears when every required prerequisite is marked complete. Missing a requirement? The catalog makes it easy to plan backward.</p><div class="logic-rule">IF Data Structures is complete<br>THEN Advanced Algorithms is eligible</div></article>
+        <article class="logic-step"><span class="logic-number">03 / MATCH</span><h3>Connect to your interests</h3><p>Eligible courses that match a selected interest rise to the top. Major-fit courses remain visible even when you’re exploring.</p><div class="flow-line"><span class="flow-pill">Your profile</span><span class="flow-arrow">→</span><span class="flow-pill">Rule checks</span><span class="flow-arrow">→</span><span class="flow-pill">Shortlist</span></div></article>
+      </div>
+    </div></section>
+    <section id="semantic-network" class="section"><div class="shell">
+      <div class="section-heading"><span class="eyebrow">The knowledge behind each match</span><h2>Course relationships, made visible</h2><p>Explore how a student profile connects to a major, interests, and completed courses, then leads to an eligible recommendation. Select any concept to inspect its relationships.</p></div>
+      <div class="network-layout">
+        <div class="network-canvas">
+          <svg class="network-svg" viewBox="0 0 920 400" role="group" aria-label="Interactive semantic network of student and course relationships">
+            <defs><marker id="network-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L7,3 z" fill="#96aa9a"/></marker></defs>
+            <g aria-hidden="true">
+              <path class="network-edge" d="M184 190 C220 165 218 70 260 58"/><text class="network-edge-label" x="198" y="121">declares major</text>
+              <path class="network-edge" d="M184 211 C214 207 230 181 260 173"/><text class="network-edge-label" x="194" y="195">interested in</text>
+              <path class="network-edge" d="M184 232 C220 256 224 328 260 328"/><text class="network-edge-label" x="198" y="280">completed</text>
+              <path class="network-edge" d="M436 58 C480 68 493 145 535 157"/><text class="network-edge-label" x="461" y="103">in pathway</text>
+              <path class="network-edge" d="M436 173 H535"/><text class="network-edge-label" x="457" y="163">aligns with</text>
+              <path class="network-edge" d="M436 328 C480 316 490 211 535 185"/><text class="network-edge-label" x="459" y="269">satisfies prerequisite</text>
+              <path class="network-edge" d="M720 185 C750 196 744 270 765 282"/><text class="network-edge-label" x="734" y="232">eligible, then ranked</text>
+            </g>
+            <g class="network-node is-active" data-network-node="student" role="button" tabindex="0" aria-pressed="true" aria-label="Student profile concept"><rect x="24" y="178" width="160" height="66" rx="8"/><circle cx="46" cy="211" r="6"/><text x="62" y="216">Student profile</text></g>
+            <g class="network-node" data-network-node="major" role="button" tabindex="0" aria-pressed="false" aria-label="Computer Science major concept"><rect x="260" y="25" width="176" height="66" rx="8"/><circle cx="282" cy="58" r="6"/><text x="298" y="63">Computer Science</text></g>
+            <g class="network-node" data-network-node="interest" role="button" tabindex="0" aria-pressed="false" aria-label="Artificial Intelligence interest concept"><rect x="260" y="140" width="176" height="66" rx="8"/><circle cx="282" cy="173" r="6"/><text x="298" y="178">Interest: AI</text></g>
+            <g class="network-node" data-network-node="completed" role="button" tabindex="0" aria-pressed="false" aria-label="Completed Data Structures prerequisite concept"><rect x="260" y="295" width="176" height="66" rx="8"/><circle cx="282" cy="328" r="6"/><text x="298" y="323"><tspan x="298">Completed course</tspan><tspan x="298" dy="16">Data Structures</tspan></text></g>
+            <g class="network-node" data-network-node="course" role="button" tabindex="0" aria-pressed="false" aria-label="Advanced Algorithms course concept"><rect x="535" y="134" width="185" height="74" rx="8"/><circle cx="559" cy="171" r="6"/><text x="575" y="176">Advanced Algorithms</text></g>
+            <g class="network-node" data-network-node="recommendation" role="button" tabindex="0" aria-pressed="false" aria-label="Recommended course concept"><rect x="765" y="250" width="145" height="72" rx="8"/><circle cx="787" cy="286" r="6"/><text x="803" y="281"><tspan x="803">Recommended</tspan><tspan x="803" dy="16">next course</tspan></text></g>
+          </svg>
+          <ul class="sr-only" aria-label="Semantic network relationships"><li>Student profile declares Computer Science as a major.</li><li>Student profile is interested in Artificial Intelligence.</li><li>Student profile has completed Data Structures.</li><li>Computer Science includes Advanced Algorithms in its course pathway.</li><li>Artificial Intelligence aligns with Advanced Algorithms.</li><li>Data Structures satisfies the Advanced Algorithms prerequisite.</li><li>Advanced Algorithms is eligible and ranked as a recommendation.</li></ul>
+        </div>
+        <aside class="network-detail" aria-live="polite" aria-atomic="true"><span id="network-detail-kicker" class="network-detail-kicker">Student entity</span><h3 id="network-detail-title">Student profile</h3><p id="network-detail-description">The student is the starting point for the network. Profile facts connect to course rules and shape the recommendation shortlist.</p><span class="network-detail-label">Connected relationships</span><ul id="network-relations" class="network-relations"><li>declares major → Computer Science</li><li>interested in → Artificial Intelligence</li><li>completed → Data Structures</li></ul><p class="network-instruction">Choose a node in the map to explore its connections.</p></aside>
+      </div>
+    </div></section>
+    <section id="catalog" class="section"><div class="shell">
+      <div class="catalog-heading"><div class="section-heading"><span class="eyebrow">Explore what’s possible</span><h2>Course catalog</h2><p>Search the sample catalog and check prerequisites before you add a course to your plan.</p></div>
+        <div class="catalog-controls"><label class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg><input type="search" id="course-search" placeholder="Search courses" aria-label="Search courses"></label><select class="filter-select" id="area-filter" aria-label="Filter by subject area"><option value="all">All areas</option><option value="Computer Science">Computer science</option><option value="Data Science">Data science</option><option value="Business">Business</option></select></div>
+      </div><p class="catalog-count" id="catalog-count" aria-live="polite"></p><div class="course-grid" id="course-grid"></div>
+    </div></section>
+  </main>
+  <footer><div class="shell"><div class="footer-main"><div class="footer-brand"><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 4.5 7v6c0 4.2 3.2 7 7.5 8 4.3-1 7.5-3.8 7.5-8V7L12 3Z"/><path d="m9 12 2 2 4-4"/></svg></span>Course Compass</a><p>Thoughtful course planning starts with a path you can see.</p></div><div class="footer-links"><div class="footer-column"><strong>Explore</strong><a href="#planner">Recommendations</a><a href="#logic">How it works</a><a href="#catalog">Course catalog</a></div><div class="footer-column"><strong>Support</strong><a href="mailto:advising@example.edu">Contact advising</a><a href="mailto:support@example.edu">Technical support</a></div></div></div><div class="footer-bottom"><span>© 2026 Course Compass · Academic planning demo</span><span class="status">Recommendation system operational</span></div></div></footer>
+  <script>
+    const courses = [
+      { code:'CS 340', name:'Advanced Algorithms', area:'Computer Science', credits:3, prerequisites:['Data Structures'], majors:['Computer Science','Data Science'], interests:['Artificial Intelligence','Systems'], year:3, description:'Design and analysis of efficient algorithms for complex problems.' },
+      { code:'CS 315', name:'Web Application Development', area:'Computer Science', credits:3, prerequisites:['Programming I'], majors:['Computer Science'], interests:['Web Development'], year:2, description:'Build accessible, data-driven applications for the modern web.' },
+      { code:'CS 455', name:'Introduction to Artificial Intelligence', area:'Computer Science', credits:3, prerequisites:['Data Structures','Statistics I'], majors:['Computer Science','Data Science'], interests:['Artificial Intelligence'], year:3, description:'Explore search, reasoning, and learning methods in intelligent systems.' },
+      { code:'DS 320', name:'Applied Data Analytics', area:'Data Science', credits:3, prerequisites:['Statistics I'], majors:['Data Science','Business'], interests:['Data Analytics','Finance'], year:2, description:'Turn real-world datasets into defensible, useful decisions.' },
+      { code:'DS 410', name:'Machine Learning Foundations', area:'Data Science', credits:4, prerequisites:['Statistics I','Calculus I'], majors:['Data Science','Computer Science'], interests:['Artificial Intelligence','Data Analytics'], year:3, description:'Learn core supervised and unsupervised learning techniques.' },
+      { code:'BUS 330', name:'Corporate Finance', area:'Business', credits:3, prerequisites:['Financial Accounting'], majors:['Business'], interests:['Finance'], year:2, description:'Evaluate investment decisions, capital structure, and firm value.' },
+      { code:'BUS 375', name:'Product Strategy & Innovation', area:'Business', credits:3, prerequisites:['Microeconomics'], majors:['Business','Computer Science'], interests:['Product Strategy'], year:3, description:'Shape product opportunities through customer and market insight.' },
+      { code:'CS 425', name:'Networks & Cybersecurity', area:'Computer Science', credits:3, prerequisites:['Programming I'], majors:['Computer Science'], interests:['Systems'], year:3, description:'Understand network protocols, threat models, and secure design.' },
+      { code:'BUS 210', name:'Financial Accounting', area:'Business', credits:3, prerequisites:[], majors:['Business'], interests:['Finance'], year:1, description:'Read financial statements and understand how organizations report performance.' }
+    ];
+    const escapeHTML = (value) => value.replace(/[&<>"']/g, (character) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[character]);
+    const courseGrid = document.getElementById('course-grid');
+    const catalogCount = document.getElementById('catalog-count');
+    const searchInput = document.getElementById('course-search');
+    const areaFilter = document.getElementById('area-filter');
+    function renderCatalog() {
+      const query = searchInput.value.trim().toLowerCase();
+      const area = areaFilter.value;
+      const filtered = courses.filter((course) => {
+        const searchable = `${course.code} ${course.name} ${course.area} ${course.prerequisites.join(' ')}`.toLowerCase();
+        return searchable.includes(query) && (area === 'all' || course.area === area);
+      });
+      catalogCount.textContent = `${filtered.length} ${filtered.length === 1 ? 'course' : 'courses'} shown`;
+      if (!filtered.length) { courseGrid.innerHTML = '<div class="catalog-empty">No courses match your search. Try another course name or subject area.</div>'; return; }
+      courseGrid.innerHTML = filtered.map((course) => `<article class="catalog-card"><div class="catalog-card-top"><span class="catalog-code">${escapeHTML(course.code)}</span><span class="catalog-area">${escapeHTML(course.area)}</span></div><h3>${escapeHTML(course.name)}</h3><p>${escapeHTML(course.description)}</p><div class="catalog-card-foot"><span class="prereq" title="${course.prerequisites.length ? `Prerequisites: ${escapeHTML(course.prerequisites.join(', '))}` : 'No prerequisites'}">${course.prerequisites.length ? `Prereq: ${escapeHTML(course.prerequisites.join(', '))}` : 'No prerequisites'}</span><span class="credits">${course.credits} credits</span></div></article>`).join('');
+    }
+    searchInput.addEventListener('input', renderCatalog); areaFilter.addEventListener('change', renderCatalog); renderCatalog();
+    const networkDetails = {
+      student: { kind:'Student entity', title:'Student profile', description:'The student is the starting point for the network. Profile facts connect to course rules and shape the recommendation shortlist.', relations:['declares major → Computer Science','interested in → Artificial Intelligence','completed → Data Structures'] },
+      major: { kind:'Academic attribute', title:'Computer Science', description:'The selected major defines a pathway of courses that may fit the student’s program.', relations:['belongs to → Student profile','opens pathway to → Advanced Algorithms'] },
+      interest: { kind:'Student interest', title:'Artificial Intelligence', description:'A selected interest helps rank otherwise eligible courses that connect to that subject.', relations:['belongs to → Student profile','aligns with → Advanced Algorithms'] },
+      completed: { kind:'Completed prerequisite', title:'Data Structures', description:'This completed course satisfies a required prerequisite for Advanced Algorithms.', relations:['completed by → Student profile','satisfies prerequisite of → Advanced Algorithms'] },
+      course: { kind:'Course concept', title:'Advanced Algorithms', description:'This course matches the Computer Science pathway and AI interest, and its prerequisite is satisfied.', relations:['in pathway for → Computer Science','matches interest → Artificial Intelligence','requires → Data Structures'] },
+      recommendation: { kind:'System outcome', title:'Recommended next course', description:'The system recommends a course after its major, year, and prerequisite rules pass; matching interests affect its ranking.', relations:['eligible course → Advanced Algorithms','ranked using → Student interests'] }
+    };
+    const networkNodes = [...document.querySelectorAll('[data-network-node]')];
+    const networkKicker = document.getElementById('network-detail-kicker');
+    const networkTitle = document.getElementById('network-detail-title');
+    const networkDescription = document.getElementById('network-detail-description');
+    const networkRelations = document.getElementById('network-relations');
+    function selectNetworkNode(node) {
+      const details = networkDetails[node.dataset.networkNode];
+      networkNodes.forEach((item) => {
+        const selected = item === node;
+        item.classList.toggle('is-active', selected);
+        item.setAttribute('aria-pressed', String(selected));
+      });
+      networkKicker.textContent = details.kind;
+      networkTitle.textContent = details.title;
+      networkDescription.textContent = details.description;
+      networkRelations.replaceChildren(...details.relations.map((relation) => {
+        const item = document.createElement('li');
+        item.textContent = relation;
+        return item;
+      }));
+    }
+    networkNodes.forEach((node) => {
+      node.addEventListener('click', () => selectNetworkNode(node));
+      node.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          selectNetworkNode(node);
+        }
+      });
+    });
+    document.getElementById('recommendation-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      if (!form.reportValidity()) return;
+      const major = document.getElementById('major').value;
+      const year = Number(document.getElementById('year').value);
+      const completed = new Set([...form.querySelectorAll('input[name="prerequisite"]:checked')].map((input) => input.value));
+      const interests = new Set([...form.querySelectorAll('input[name="interest"]:checked')].map((input) => input.value));
+      const candidateCourses = courses.filter((course) => course.majors.includes(major) && year >= course.year)
+        .map((course) => ({ ...course, missingPrerequisites:course.prerequisites.filter((prerequisite) => !completed.has(prerequisite)), interestMatch:course.interests.some((interest) => interests.has(interest)) }));
+      const recommended = candidateCourses.filter((course) => !course.missingPrerequisites.length)
+        .sort((first, second) => Number(second.interestMatch)-Number(first.interestMatch) || first.year-second.year || first.code.localeCompare(second.code));
+      const pathwayCourses = candidateCourses.filter((course) => course.missingPrerequisites.length)
+        .sort((first, second) => first.missingPrerequisites.length-second.missingPrerequisites.length || Number(second.interestMatch)-Number(first.interestMatch) || first.code.localeCompare(second.code));
+      const output = document.getElementById('recommendation-output');
+      const count = document.getElementById('result-count');
+      const subtitle = document.getElementById('results-subtitle');
+      count.textContent = `${recommended.length} eligible`;
+      count.classList.add('visible');
+      subtitle.textContent = recommended.length ? `Based on your ${major} profile, year, and completed prerequisites.` : pathwayCourses.length ? 'No courses meet every prerequisite yet. Here are the closest courses to unlock.' : 'No courses in this major pathway are listed for your year yet.';
+      if (!recommended.length) {
+        if (!pathwayCourses.length) { output.innerHTML = '<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4M8 11h6"/></svg></div><h4>No courses in this pathway yet</h4><p>Try a later academic year or browse the catalog for courses in your field.</p></div>'; return; }
+        output.innerHTML = `<p class="shortlist-note"><strong>Next steps, not eligible recommendations:</strong> these courses fit your major and year, but still need the listed prerequisites.</p><div class="recommendation-list">${pathwayCourses.slice(0,4).map((course) => `<article class="recommendation-card"><div class="recommendation-top"><div><span class="course-code">${escapeHTML(course.code)} · ${escapeHTML(course.area)}</span><h4>${escapeHTML(course.name)}</h4><p>${escapeHTML(course.description)}</p></div><span class="fit-badge is-next-step">TO UNLOCK</span></div><div class="recommendation-meta"><span>${course.credits} credits</span><span>${course.missingPrerequisites.length} prerequisite${course.missingPrerequisites.length === 1 ? '' : 's'} remaining</span></div><p class="missing-prerequisites"><strong>Still needed:</strong> ${escapeHTML(course.missingPrerequisites.join(', '))}</p></article>`).join('')}</div>`;
+        return;
+      }
+      output.innerHTML = `<div class="recommendation-list">${recommended.map((course) => `<article class="recommendation-card"><div class="recommendation-top"><div><span class="course-code">${escapeHTML(course.code)} · ${escapeHTML(course.area)}</span><h4>${escapeHTML(course.name)}</h4><p>${escapeHTML(course.description)}</p></div>${course.interestMatch ? '<span class="fit-badge">INTEREST MATCH</span>' : ''}</div><div class="recommendation-meta"><span>${course.credits} credits</span><span>${course.prerequisites.length ? `Prerequisites met: ${escapeHTML(course.prerequisites.join(', '))}` : 'No prerequisites'}</span></div><p class="rule-note"><strong>Why this fits:</strong> ${escapeHTML(major)} pathway, year ${year}${course.interestMatch ? ', matches an area you selected' : ''}, and all listed prerequisites are complete.</p></article>`).join('')}</div>`;
+    });
+  </script>
+</body>
+</html>
